@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fart Hotel</title>
+    <link rel="stylesheet" href="src/style.css" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  </head>
+  <body>
+    <!-- User Identity Display -->
+    <div class="user-identity">
+      <img id="user-avatar" class="user-avatar" src="" alt="User Avatar" />
+      <div class="user-info">
+        <div id="user-name" class="user-name">Loading...</div>
+        <div id="user-id" class="user-id">ID: ...</div>
+        <div class="user-status">Guest User</div>
+      </div>
+      <button id="login-btn" class="login-btn">Login</button>
+    </div>
+<div id="auth-modal" class="auth-modal">
+  <div class="auth-content">
+    <!-- Login Tab -->
+    <div id="login-tab" class="auth-tab active">
+      <h2>🏨 Join Fart Hotel! 💨</h2>
+      <p class="auth-subtitle">Ready to become a legendary fart detective?</p>
+      
+      <div class="auth-methods">
+        <button id="google-login" class="auth-btn google-btn">
+          🔍 <span>Detective Login with Google</span>
+        </button>
+        
+        <div class="divider">
+          <span>or sneak in with email</span>
+        </div>
+        
+        <form id="email-login-form" class="auth-form">
+          <div class="input-group">
+            <input type="email" id="login-email" placeholder="your.nose@detective.com" required>
+            <label>🕵️‍♂️ Detective Email</label>
+          </div>
+          
+          <div class="input-group">
+            <input type="password" id="login-password" placeholder="super-secret-password" required>
+            <label>🔐 Secret Password</label>
+          </div>
+          
+          <button type="submit" class="auth-btn email-btn">
+            💨 <span>Enter the Hotel</span>
+          </button>
+        </form>
+        
+        <button id="forgot-password" class="link-btn">
+          🤔 Forgot your secret password?
+        </button>
+        
+        <button id="show-register" class="link-btn">
+          👶 New detective? Register here!
+        </button>
+      </div>
+      
+      <div class="auth-footer">
+        <button id="continue-guest" class="auth-btn guest-btn">
+          👤 Continue as Mystery Guest
+        </button>
+      </div>
+    </div>
+    
+    <!-- Register Tab -->
+    <div id="register-tab" class="auth-tab">
+      <h2>🎓 Detective Academy 🕵️‍♂️</h2>
+      <p class="auth-subtitle">Train to become the ultimate fart sleuth!</p>
+      
+      <form id="email-register-form" class="auth-form">
+        <div class="input-group">
+          <input type="text" id="register-username" placeholder="SneakyNoseDetective" required>
+          <label>🎭 Detective Codename</label>
+        </div>
+        
+        <div class="input-group">
+          <input type="email" id="register-email" placeholder="your.nose@detective.com" required>
+          <label>📧 Detective Email</label>
+        </div>
+        
+        <div class="input-group">
+          <input type="password" id="register-password" placeholder="super-secret-password" required>
+          <label>🔐 Secret Password</label>
+        </div>
+        
+        <div class="input-group">
+          <input type="password" id="confirm-password" placeholder="confirm-secret-password" required>
+          <label>✅ Confirm Secret</label>
+        </div>
+        
+        <button type="submit" class="auth-btn register-btn">
+          🎉 <span>Graduate & Enter Hotel</span>
+        </button>
+      </form>
+      
+      <button id="show-login" class="link-btn">
+        🔙 Already a detective? Login here!
+      </button>
+    </div>
+    
+    <!-- Forgot Password Tab -->
+    <div id="forgot-tab" class="auth-tab">
+      <h2>🤔 Lost Your Detective Badge? 🔍</h2>
+      <p class="auth-subtitle">Don't worry, even the best detectives lose things!</p>
+      
+      <form id="forgot-password-form" class="auth-form">
+        <div class="input-group">
+          <input type="email" id="forgot-email" placeholder="your.nose@detective.com" required>
+          <label>📧 Your Detective Email</label>
+        </div>
+        
+        <button type="submit" class="auth-btn forgot-btn">
+          📬 <span>Send Recovery Clue</span>
+        </button>
+      </form>
+      
+      <p class="help-text">
+        We'll send you a secret clue to reset your password! 🕵️‍♂️✉️
+      </p>
+      
+      <button id="back-to-login" class="link-btn">
+        🔙 Back to Detective HQ
+      </button>
+    </div>
+    
+    <button id="close-modal" class="close-btn">✖️</button>
+  </div>
+</div>
+
+    <!-- Volume Controls -->
+    <div class="volume-controls">
+      <button class="volume-btn" id="music-toggle" title="Toggle Music">
+        🎵
+      </button>
+      <button class="volume-btn" id="sound-toggle" title="Toggle Sound Effects">
+        🔊
+      </button>
+    </div>
+
+	<!-- Game Container -->
+    <div class="game-container">
+      <h1>🏨 FART HOTEL 💨</h1>
+
+      <div class="game-stats">
+        <div class="stat">
+          <div class="stat-label">Score</div>
+          <div class="stat-value" id="score">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Round</div>
+          <div class="stat-value" id="round">1</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Time</div>
+          <div class="stat-value" id="timer">30s</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">High Score</div>
+          <div class="stat-value" id="high-score">0</div>
+        </div>
+      </div>
+
+      <div id="message">
+        💨 Someone just let one rip! Can you sniff out the culprit? 💨
+      </div>
+
+      <div id="character-grid"></div>
+
+      <div class="controls">
+        <button id="start-btn">New Game</button>
+        <button id="next-btn" class="hidden">Next Round</button>
+      </div>
+    </div>
+
+    <script src="src/script.ts"></script>
+  </body>
+</html>
