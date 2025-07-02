@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+allFilesToMD.js
+code-files.md
+bun.lock
