@@ -14,6 +14,7 @@
     "@biomejs/biome": "2.0.5",
     "typescript": "~5.8.3",
     "ultracite": "5.0.29",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "husky": "^9.1.7"
   }
 }
