@@ -534,6 +534,11 @@ h1 {
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
+.character.selected {
+  border: 3px solid #5759d9;
+  transform: scale(1.05);
+}
+
 .character.correct {
   border-color: #4ecdc4;
   animation: correctWiggle 0.6s ease-in-out;

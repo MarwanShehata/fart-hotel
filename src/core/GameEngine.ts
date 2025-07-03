@@ -2,6 +2,9 @@ import { AuthManager } from "../auth/AuthManager";
 
 class GameEngine {
   private authManager: AuthManager;
+  public selectedFarters: string[] = [];
+  public isSubmissionPhase: boolean = false;
+  public currentRoundScore: number = 0;
 
   constructor() {
     this.authManager = AuthManager.getInstance();

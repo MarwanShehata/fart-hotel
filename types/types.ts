@@ -1,4 +1,4 @@
-export type SoundType = "correct" | "wrong";
+export type SoundType = "correct" | "wrong" | "selection" | "submit";
 export type AvatarStyle =
   | "adventurer"
   | "avataaars"
@@ -100,7 +100,9 @@ export interface GameState extends ScoreData, Farters {
   round: number;
   timeLeft: number;
   gameActive: boolean;
-  selectedGuesses: number[];
+  isSubmissionPhase: boolean;
+  selectedFarters: number[];
+  currentRoundScore: number;
 }
 export interface LeaderboardEntry extends UserIdentity, ScoreData {
   totalGames: number;
