@@ -24,4 +24,5 @@ dist-ssr
 *.sw?
 allFilesToMD.js
 code-files.md
-bun.lock
+biome.jsonc
+

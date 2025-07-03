@@ -1,0 +1,11 @@
+# No bang?
+echo "Running pre-commit checks..."
+
+# Run Biome format and check, then add changes
+bun run format
+bun run lint
+
+# Run typecheck
+bun run typecheck
+
+echo "Pre-commit checks completed."
