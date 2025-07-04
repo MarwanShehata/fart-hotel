@@ -2,11 +2,11 @@
 echo "Running pre-commit checks..."
 
 # Run Biome format and check, then add changes
-# npx bun run format
-# npx bun run lint
-# git add .
+npx bun run format
+npx bun run lint
+git add .
 
-# # Run typecheck
-# npx bun run typecheck
+# Run typecheck
+npx bun run typecheck
 
-# echo "Pre-commit checks completed."
+echo "Pre-commit checks completed."
