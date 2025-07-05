@@ -422,48 +422,24 @@ class FartHotel {
       startBtn: document.getElementById('start-btn') as HTMLButtonElement,
       submitBtn: document.getElementById('submit-btn') as HTMLButtonElement,
       nextBtn: document.getElementById('next-btn') as HTMLButtonElement,
-      musicToggleBtn: document.getElementById(
-        'music-toggle'
-      ) as HTMLButtonElement,
-      soundToggleBtn: document.getElementById(
-        'sound-toggle'
-      ) as HTMLButtonElement,
-      gameContainer: document.querySelector(
-        '.game-container'
-      ) as HTMLDivElement,
+      musicToggleBtn: document.getElementById('music-toggle') as HTMLButtonElement,
+      soundToggleBtn: document.getElementById('sound-toggle') as HTMLButtonElement,
+      gameContainer: document.querySelector('.game-container') as HTMLDivElement,
       userAvatar: document.getElementById('user-avatar') as HTMLImageElement,
       userName: document.getElementById('user-name') as HTMLDivElement,
       userId: document.getElementById('user-id') as HTMLDivElement,
       loginBtn: document.getElementById('login-btn') as HTMLButtonElement,
       authModal: document.getElementById('auth-modal') as HTMLDivElement,
-      googleLoginBtn: document.getElementById(
-        'google-login'
-      ) as HTMLButtonElement,
-      emailLoginForm: document.getElementById(
-        'email-login-form'
-      ) as HTMLFormElement,
-      emailRegisterForm: document.getElementById(
-        'email-register-form'
-      ) as HTMLFormElement,
-      forgotPasswordForm: document.getElementById(
-        'forgot-password-form'
-      ) as HTMLFormElement,
-      showRegisterBtn: document.getElementById(
-        'show-register'
-      ) as HTMLButtonElement,
+      googleLoginBtn: document.getElementById('google-login') as HTMLButtonElement,
+      emailLoginForm: document.getElementById('email-login-form') as HTMLFormElement,
+      emailRegisterForm: document.getElementById('email-register-form') as HTMLFormElement,
+      forgotPasswordForm: document.getElementById('forgot-password-form') as HTMLFormElement,
+      showRegisterBtn: document.getElementById('show-register') as HTMLButtonElement,
       showLoginBtn: document.getElementById('show-login') as HTMLButtonElement,
-      showForgotBtn: document.getElementById(
-        'forgot-password'
-      ) as HTMLButtonElement,
-      backToLoginBtn: document.getElementById(
-        'back-to-login'
-      ) as HTMLButtonElement,
-      continueGuestBtn: document.getElementById(
-        'continue-guest'
-      ) as HTMLButtonElement,
-      closeModalBtn: document.getElementById(
-        'close-modal'
-      ) as HTMLButtonElement,
+      showForgotBtn: document.getElementById('forgot-password') as HTMLButtonElement,
+      backToLoginBtn: document.getElementById('back-to-login') as HTMLButtonElement,
+      continueGuestBtn: document.getElementById('continue-guest') as HTMLButtonElement,
+      closeModalBtn: document.getElementById('close-modal') as HTMLButtonElement,
     }
   }
 
@@ -473,10 +449,7 @@ class FartHotel {
     updateUserDisplay(this.dom, this.userDataState)
     this.setupEventListeners()
     this.setupPageVisibilityHandlers()
-    showMessage(
-      this.dom,
-      "🏨 Welcome to Fart Hotel! Click 'New Game' to start! 🕵️‍♂️"
-    )
+    showMessage(this.dom,"🏨 Welcome to Fart Hotel! Click 'New Game' to start! 🕵️‍♂️")
   }
 
   private setupEventListeners(): void {
@@ -516,7 +489,7 @@ class FartHotel {
     if (!this.audioState.audioContext) {
       this.audioState.audioContext = new (
         window.AudioContext ||
-        // biome-ignore lint/suspicious/noExplicitAny: sdasd
+        // biome-ignore lint/suspicious/noExplicitAny: it's broken
         (window as any).webkitAudioContext
       )()
     }
