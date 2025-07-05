@@ -1,12 +1,5 @@
-#!/usr/bin/env sh
-echo "Running pre-commit checks..."
-
-# Run Biome format and check, then add changes
-npx bun run format
-npx bun run lint
+bun run format
+bun run lint:fix
 git add .
 
-# Run typecheck
-npx bun run typecheck
-
-echo "Pre-commit checks completed."
+bun run typecheck

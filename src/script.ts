@@ -125,8 +125,7 @@ export const getGuestUser = (): UserData => {
       // Ensure the isAuthenticated flag is always false for guests
       storedUser.isAuthenticated = false
       return storedUser
-    } catch (error) {
-      console.error('Failed to parse guest user from storage:', error)
+    } catch (_error) {
       // Fallback to creating a new user if JSON is corrupt
     }
   }
@@ -149,7 +148,7 @@ export const clearGuestUserFromStorage = (): void => {
  * Loads high score from localStorage (fallback until Firebase is implemented)
  */
 export const loadHighScoreFromStorage = (): number => {
-  return parseInt(localStorage.getItem('fartHotelHighScore') || '0', 10)
+  return Number.parseInt(localStorage.getItem('fartHotelHighScore') || '0', 10)
 }
 
 /**
@@ -205,7 +204,9 @@ export const calculateAverageReactionTime = (
   totalGuesses: number,
   newTime: number
 ): number => {
-  if (totalGuesses === 0) return newTime
+  if (totalGuesses === 0) {
+    return newTime
+  }
   return (currentAverage * (totalGuesses - 1) + newTime) / totalGuesses
 }
 
@@ -336,7 +337,7 @@ export const showMessage = (
 
 export const revealFarters = (farters: BaseUserData[]): void => {
   // Highlight all the correct farters
-  farters.forEach((farter) => {
+  for (const farter of farters) {
     const farterIndex = farter.farterIndex
     const farterElement = document.querySelector(
       `.character[data-index="${farterIndex}"]`
@@ -348,17 +349,17 @@ export const revealFarters = (farters: BaseUserData[]): void => {
       farterElement.style.boxShadow = '0 0 15px rgba(255, 107, 107, 0.7)'
       farterElement.style.transform = 'scale(1.05)'
     }
-  })
+  }
 }
 
 export const clearCharacterStyling = (): void => {
-  document.querySelectorAll('.character').forEach((char) => {
+  for (const char of document.querySelectorAll('.character')) {
     char.classList.remove('revealed-farter', 'correct', 'wrong')
     const element = char as HTMLElement
     element.style.border = ''
     element.style.boxShadow = ''
     element.style.transform = ''
-  })
+  }
 }
 
 export const showFartConfetti = (gameContainer: Element): void => {
@@ -481,8 +482,9 @@ class FartHotel {
   private setupEventListeners(): void {
     this.dom.startBtn.addEventListener('click', () => this.startGame())
     this.dom.nextBtn.addEventListener('click', () => {
-      if (this.timersState.nextRoundTimeout)
+      if (this.timersState.nextRoundTimeout) {
         clearTimeout(this.timersState.nextRoundTimeout)
+      }
       this.nextRound()
     })
     this.dom.musicToggleBtn.addEventListener('click', () => this.toggleMusic())
@@ -512,8 +514,11 @@ class FartHotel {
 
   private initAudioContext(): void {
     if (!this.audioState.audioContext) {
-      this.audioState.audioContext = new (window.AudioContext ||
-        (window as any).webkitAudioContext)()
+      this.audioState.audioContext = new (
+        window.AudioContext ||
+        // biome-ignore lint/suspicious/noExplicitAny: sdasd
+        (window as any).webkitAudioContext
+      )()
     }
   }
 
@@ -616,11 +621,12 @@ class FartHotel {
     this.dom.submitBtn.classList.add('hidden') // Hide submit button at start of round
     this.roundStartTime = Date.now()
     // --- DEBUGGING ---
+    // biome-ignore lint/suspicious/noConsole: sdad
     console.log(
       'Farters in this round:',
       this.gameState.fartersArray.map((farter) => farter.farterIndex)
     )
-    this.gameState.fartersArray.forEach((farter) => {
+    for (const farter of this.gameState.fartersArray) {
       const farterIndex = farter.farterIndex
       const farterElement = document.querySelector(
         `.character[data-index="${farterIndex}"]`
@@ -628,7 +634,7 @@ class FartHotel {
       if (farterElement) {
         farterElement.style.border = '1px solid red'
       }
-    })
+    }
     // --- END DEBUGGING ---
 
     clearCharacterStyling() // Clear any previous styling
@@ -637,12 +643,22 @@ class FartHotel {
       `💨 Round ${this.gameState.round}: Who is the culprit?! 💨`
     )
     updateGameDisplay(this.dom, this.gameState)
-    await this.loadCharacters()
-    this.startTimer()
+    this.showEmptyGrid() // Show skeleton loaders immediately
+
+    try {
+      await this.loadCharacters() // Load images
+      this.startTimer() // Start timer only after images are loaded
+    } catch (_error) {
+      // biome-ignore lint/suspicious/noConsole: sdadg
+      console.error('Error loading characters, starting timer anyway:', _error)
+      this.startTimer() // Fallback to start timer if images fail
+    }
   }
 
   private startTimer(): void {
-    if (this.timersState.roundTimer) clearInterval(this.timersState.roundTimer)
+    if (this.timersState.roundTimer) {
+      clearInterval(this.timersState.roundTimer)
+    }
 
     this.timersState.roundTimer = setInterval(() => {
       this.gameState.timeLeft--
@@ -662,15 +678,19 @@ class FartHotel {
     }, 1000)
   }
   private handleGuess(e: MouseEvent): void {
-    if (!this.gameState.gameActive || this.gameState.isSubmissionPhase) return
+    if (!this.gameState.gameActive || this.gameState.isSubmissionPhase) {
+      return
+    }
 
     const target = e.target as HTMLElement
     const characterDiv = target.closest<HTMLDivElement>(
       '.character:not(.skeleton)'
     )
-    if (!characterDiv) return
+    if (!characterDiv) {
+      return
+    }
 
-    const guess = parseInt(characterDiv.dataset.index!, 10)
+    const guess = Number.parseInt(characterDiv.dataset.index ?? '0', 10)
     const isSelected = this.gameState.selectedFarters.includes(guess)
 
     if (isSelected) {
@@ -683,8 +703,9 @@ class FartHotel {
       characterDiv.classList.add('selected')
     }
 
-    const isCorrect = isCorrectGuess(guess, this.gameState.fartersArray)
-    console.log({ selectedFarterNo: guess, correctAnswer: isCorrect })
+    const _isCorrect = isCorrectGuess(guess, this.gameState.fartersArray)
+    // biome-ignore lint/suspicious/noConsole: dsadas
+    console.log({ selectedFarterNo: guess, correctAnswer: _isCorrect })
 
     this.playSound('selection')
 
@@ -710,7 +731,7 @@ class FartHotel {
       correctGuesses.length > 0 &&
       correctGuesses.length === this.gameState.selectedFarters.length
 
-    this.gameState.selectedFarters.forEach((guess) => {
+    for (const guess of this.gameState.selectedFarters) {
       const characterDiv = document.querySelector(
         `.character[data-index="${guess}"]`
       ) as HTMLElement
@@ -722,7 +743,7 @@ class FartHotel {
           characterDiv.classList.add('wrong')
         }
       }
-    })
+    }
 
     if (allCorrect) {
       const points = correctGuesses.length * 10
@@ -730,10 +751,8 @@ class FartHotel {
       this.gameState.score += points
       this.playSound('submit')
       showMessage(this.dom, `Correct! +${points} points`, 'correct')
-      this.timersState.nextRoundTimeout = setTimeout(
-        () => this.nextRound(),
-        2000
-      )
+      showFartConfetti(this.dom.gameContainer)
+      this.dom.nextBtn.classList.remove('hidden')
     } else {
       this.gameState.currentRoundScore = 0
       this.playSound('wrong')
@@ -763,7 +782,9 @@ class FartHotel {
   }
 
   private playSound(type: SoundType): void {
-    if (!this.audioState.soundEnabled || !this.audioState.audioContext) return
+    if (!(this.audioState.soundEnabled && this.audioState.audioContext)) {
+      return
+    }
 
     const oscillator = this.audioState.audioContext.createOscillator()
     const gainNode = this.audioState.audioContext.createGain()
@@ -826,6 +847,8 @@ class FartHotel {
         oscillator.start(this.audioState.audioContext.currentTime)
         oscillator.stop(this.audioState.audioContext.currentTime + 0.2)
         return
+      default:
+        break
     }
 
     gainNode.gain.setValueAtTime(0.2, this.audioState.audioContext.currentTime)
@@ -838,19 +861,26 @@ class FartHotel {
   }
 
   private playBackgroundMusic(): void {
-    if (!this.audioState.musicEnabled || !this.audioState.audioContext) return
+    if (!(this.audioState.musicEnabled && this.audioState.audioContext)) {
+      return
+    }
     this.stopBackgroundMusic()
 
-    this.audioState.backgroundMusicContext = new (window.AudioContext ||
-      (window as any).webkitAudioContext)()
+    this.audioState.backgroundMusicContext =
+      new // biome-ignore lint/suspicious/noExplicitAny: Don't change the any type
+      (window.AudioContext || (window as any).webkitAudioContext)()
     const melody = [261, 293, 329, 261, 293, 329, 392, 329]
     let noteTime = this.audioState.backgroundMusicContext.currentTime
 
     const playLoop = (): void => {
-      if (!this.audioState.backgroundMusicContext) return
+      if (!this.audioState.backgroundMusicContext) {
+        return
+      }
 
-      melody.forEach((freq) => {
-        if (!this.audioState.backgroundMusicContext) return
+      for (const freq of melody) {
+        if (!this.audioState.backgroundMusicContext) {
+          return
+        }
         if (!freq) {
           noteTime += 0.4
           return
@@ -866,7 +896,7 @@ class FartHotel {
         osc.start(noteTime)
         osc.stop(noteTime + 0.35)
         noteTime += 0.4
-      })
+      }
 
       if (this.audioState.musicEnabled && this.gameState.gameActive) {
         this.timersState.musicLoop = setTimeout(playLoop, 3200)
@@ -876,15 +906,18 @@ class FartHotel {
   }
 
   private stopBackgroundMusic(): void {
-    if (this.timersState.musicLoop) clearTimeout(this.timersState.musicLoop)
+    if (this.timersState.musicLoop) {
+      clearTimeout(this.timersState.musicLoop)
+    }
     if (this.audioState.backgroundMusicContext) {
-      this.audioState.backgroundMusicContext
-        .close()
-        .catch((e) => console.error('Error closing audio context:', e))
+      this.audioState.backgroundMusicContext.close().catch((_e) => {
+        // biome-ignore lint/suspicious/noConsole: sdsada
+        console.error(_e)
+      })
       this.audioState.backgroundMusicContext = null
     }
   }
-  public toggleMusic(): void {
+  toggleMusic(): void {
     this.audioState.musicEnabled = !this.audioState.musicEnabled
     this.dom.musicToggleBtn.textContent = this.audioState.musicEnabled
       ? '🎵'
@@ -898,7 +931,7 @@ class FartHotel {
     }
   }
 
-  public toggleSound(): void {
+  toggleSound(): void {
     this.audioState.soundEnabled = !this.audioState.soundEnabled
     this.dom.soundToggleBtn.textContent = this.audioState.soundEnabled
       ? '🔊'
@@ -927,9 +960,10 @@ class FartHotel {
       this.audioState.audioContext &&
       this.audioState.audioContext.state !== 'closed'
     ) {
-      this.audioState.audioContext
-        .close()
-        .catch((e) => console.error('Error closing audio context:', e))
+      this.audioState.audioContext.close().catch((e) => {
+        // biome-ignore lint/suspicious/noConsole: sada
+        console.error(e)
+      })
       this.audioState.audioContext = null
     }
   }
@@ -947,9 +981,11 @@ class FartHotel {
 
   private cleanupGame(): void {
     // Clear all timers
-    Object.values(this.timersState).forEach((timer) => {
-      if (timer) clearTimeout(timer)
-    })
+    for (const timer of Object.values(this.timersState)) {
+      if (timer) {
+        clearTimeout(timer)
+      }
+    }
 
     this.stopBackgroundMusic()
 
@@ -957,9 +993,10 @@ class FartHotel {
       this.audioState.audioContext &&
       this.audioState.audioContext.state !== 'closed'
     ) {
-      this.audioState.audioContext
-        .close()
-        .catch((e) => console.error('Error closing audio context:', e))
+      this.audioState.audioContext.close().catch((e) => {
+        // biome-ignore lint/suspicious/noConsole: sada
+        console.error(e)
+      })
     }
 
     this.gameState.gameActive = false
@@ -969,9 +1006,11 @@ class FartHotel {
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
         this.pauseGame()
+        // biome-ignore lint/suspicious/noConsole: sdad
         console.log('you switched the tab so we paused the game for you')
       } else {
         this.resumeGame()
+        // biome-ignore lint/suspicious/noConsole: sdad
         console.log('thank you for resuming the game')
       }
     })
@@ -1056,12 +1095,12 @@ class FartHotel {
   }
 
   private showAuthTab(tabId: string): void {
-    document
-      .querySelectorAll('.auth-tab')
-      .forEach((tab) => tab.classList.remove('active'))
+    for (const tab of document.querySelectorAll('.auth-tab')) {
+      tab.classList.remove('active')
+    }
     document.getElementById(tabId)?.classList.add('active')
   }
-  public setAuthenticatedUser(userData: UserData): void {
+  setAuthenticatedUser(userData: UserData): void {
     // Will be called after successful login
     Object.assign(this.userDataState, userData)
     this.userDataState.isAuthenticated = true
@@ -1076,42 +1115,44 @@ class FartHotel {
     // Will handle anonymous or Google auth
   }
 
-  private async saveGameSession(): Promise<boolean> {
+  private saveGameSession(): Promise<boolean> {
     // Will save complete game session
-    return true
+    return Promise.resolve(true)
   }
 
-  private async updatePlayerStats(): Promise<boolean> {
+  private updatePlayerStats(): Promise<boolean> {
     // Will update player statistics
-    return true
+    return Promise.resolve(true)
   }
 
-  private async updateLeaderboard(): Promise<boolean> {
+  private updateLeaderboard(): Promise<boolean> {
     // Will update global leaderboard
-    return true
+    return Promise.resolve(true)
   }
 
-  private async loadLeaderboard(): Promise<LeaderboardEntry[]> {
+  private loadLeaderboard(): Promise<LeaderboardEntry[]> {
     // Will fetch top players
-    return []
+    return Promise.resolve([])
   }
 
-  private async loadHighScore(): Promise<number> {
+  private loadHighScore(): Promise<number> {
     // Will load from Firebase
-    return 0
+    return Promise.resolve(0)
   }
 
-  private async saveHighScore(): Promise<boolean> {
+  private saveHighScore(): Promise<boolean> {
     // Will save to Firebase
-    return true
+    return Promise.resolve(true)
   }
-  private async savePlayerStats(): Promise<void> {
+  private savePlayerStats(): Promise<void> {
     // This would save to Firebase
-    console.log('Saving player stats:', this.playerStatsState)
+    // biome-ignore lint/suspicious/noConsole: dsad
+    console.log('Saving·player·stats:', this.playerStatsState)
+    return Promise.resolve()
   }
 
   // Method to display stats to user
-  public getPlayerStats(): PlayerStats {
+  getPlayerStats(): PlayerStats {
     return { ...this.playerStatsState }
   }
 }
